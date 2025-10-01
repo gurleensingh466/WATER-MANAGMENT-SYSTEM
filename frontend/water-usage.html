@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Usage Analysis - Water Monitoring System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/water-usage.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-water"></i>
+                <h1>WaterWatch</h1>
+            </div>
+            <button class="sidebar-close" id="sidebarClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="user-profile">
+            <div class="profile-image">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="profile-info">
+                <h3>Welcome</h3>
+                <p class="user-name">Guest User</p>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="index.html">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="submenu-toggle">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="dashboard.html">Water Quality</a></li>
+                        <li><a href="farm-view.html">Farm Management</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="submenu-toggle active">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Analytics</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                    <ul class="submenu active">
+                        <li><a href="water-usage.html" class="active">Water Usage</a></li>
+                        <li><a href="#">Pump Stats</a></li>
+                        <li><a href="#">Reports</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="submenu-toggle">
+                        <i class="fas fa-bell"></i>
+                        <span>Alerts</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="#">Notifications</a></li>
+                        <li><a href="#">Alert Settings</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="about.html">
+                        <i class="fas fa-info-circle"></i>
+                        <span>About</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="contact.html">
+                        <i class="fas fa-envelope"></i>
+                        <span>Contact</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                        <span>Dark Mode</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <!-- Header -->
+        <header class="main-header">
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h1>Water Usage Analysis</h1>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="analysis-container">
+                <div class="analysis-form">
+                    <h2>Crop Water Requirement Calculator</h2>
+                    
+                    <div class="form-section">
+                        <h3>Basic Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="cropType">Crop Type</label>
+                                <select id="cropType" class="form-control" required>
+                                    <option value="">Select a crop...</option>
+                                    <option value="wheat">Wheat</option>
+                                    <option value="rice">Rice (Paddy)</option>
+                                    <option value="corn">Corn (Maize)</option>
+                                    <option value="potato">Potato</option>
+                                    <option value="tomato">Tomato</option>
+                                    <option value="cotton">Cotton</option>
+                                    <option value="sugarcane">Sugarcane</option>
+                                    <option value="soybean">Soybean</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="landArea">Land Area</label>
+                                <div class="input-with-unit">
+                                    <input type="number" id="landArea" class="form-control" required min="0" step="0.1">
+                                    <select id="areaUnit" class="unit-select">
+                                        <option value="hectare">Hectares</option>
+                                        <option value="acre">Acres</option>
+                                        <option value="sqm">Square Meters</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Soil & Climate Details</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="soilType">Soil Type</label>
+                                <select id="soilType" class="form-control" required>
+                                    <option value="">Select soil type...</option>
+                                    <option value="loamy">Loamy Soil</option>
+                                    <option value="sandy">Sandy Soil</option>
+                                    <option value="clay">Clay Soil</option>
+                                    <option value="silt">Silty Soil</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="season">Growing Season</label>
+                                <select id="season" class="form-control" required>
+                                    <option value="">Select season...</option>
+                                    <option value="summer">Summer</option>
+                                    <option value="winter">Winter</option>
+                                    <option value="monsoon">Monsoon</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Irrigation Details</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="irrigationType">Irrigation Method</label>
+                                <select id="irrigationType" class="form-control" required>
+                                    <option value="">Select method...</option>
+                                    <option value="drip">Drip Irrigation</option>
+                                    <option value="sprinkler">Sprinkler System</option>
+                                    <option value="flood">Flood Irrigation</option>
+                                    <option value="furrow">Furrow Irrigation</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="pumpPower">Pump Power (HP)</label>
+                                <input type="number" id="pumpPower" class="form-control" required min="0" step="0.5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="resetForm()">Reset</button>
+                        <button type="button" class="btn-primary" onclick="calculateWaterUsage()">Calculate</button>
+                    </div>
+                </div>
+
+                <!-- Results Section (Initially Hidden) -->
+                <div class="analysis-results" id="resultsSection" style="display: none;">
+                    <h2>Analysis Results</h2>
+                    
+                    <div class="results-grid">
+                        <div class="result-card">
+                            <div class="result-icon">
+                                <i class="fas fa-tint"></i>
+                            </div>
+                            <div class="result-content">
+                                <h3>Daily Water Requirement</h3>
+                                <p class="result-value" id="dailyWater">0 L/day</p>
+                                <p class="result-note">Based on crop type and area</p>
+                            </div>
+                        </div>
+
+                        <div class="result-card">
+                            <div class="result-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="result-content">
+                                <h3>Power Consumption</h3>
+                                <p class="result-value" id="powerConsumption">0 kWh/day</p>
+                                <p class="result-note">Estimated daily power usage</p>
+                            </div>
+                        </div>
+
+                        <div class="result-card">
+                            <div class="result-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="result-content">
+                                <h3>Daily Operating Cost</h3>
+                                <p class="result-value" id="operatingCost">$0/day</p>
+                                <p class="result-note">Including power and maintenance</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="recommendation-section">
+                        <h3>Recommendations</h3>
+                        <ul class="recommendation-list" id="recommendationList">
+                            <!-- Recommendations will be added dynamically -->
+                        </ul>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="modifyCalculation()">Modify</button>
+                        <button type="button" class="btn-primary" onclick="addToSchedule()">Add to Irrigation Schedule</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/sidebar.js"></script>
+    <script src="js/water-usage.js"></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+Project Overview - Water Monitoring System
+
+1. Backend
+
+- main.py
+  Entry point for FastAPI backend API.
+  Uses FastAPI framework with CORS middleware.
+  Imports and includes routers for sensors, weather, hazards, alerts, and authentication.
+  Runs with Uvicorn server.
+
+- api/database.py
+  Sets up SQLAlchemy database connection.
+  Uses DATABASE_URL environment variable or defaults to SQLite.
+  Provides sessionmaker and Base declarative class.
+  Provides get_db dependency for DB sessions.
+
+- api/models/models.py
+  Defines SQLAlchemy ORM models:
+  - User: user info with email, password, phone, active status, professional flag.
+  - SensorData: sensor readings (temperature, pH, turbidity, dissolved oxygen).
+  - HazardLog: hazard severity, description, linked to sensor data.
+  - Config: key-value config storage.
+  - Farm: farm details linked to user.
+  - PumpLog: pump usage logs linked to farm.
+  - WaterUsage: water usage records linked to farm.
+  - CropSchedule: crop planting schedule linked to farm.
+
+- api/models/schemas.py
+  Defines Pydantic models for data validation and serialization:
+  - UserBase, UserCreate, User.
+  - SensorDataBase, SensorDataCreate, SensorData.
+  - HazardLogBase, HazardLogCreate, HazardLog.
+  - Token and TokenData for authentication.
+
+- api/routes/hazards.py
+  FastAPI router for hazard analysis and logs.
+  - analyze_water_quality: analyzes sensor data for hazards.
+  - POST /analyze: saves sensor data, analyzes hazards, creates hazard log, sends alert.
+  - GET /: returns hazard logs with pagination.
+
+2. Frontend
+
+- dashboard.html
+  Main dashboard page with sidebar navigation, quick stats, charts, action center, and alerts.
+  Uses FontAwesome for icons.
+  Includes Chart.js library for charts.
+  Contains canvas elements for water quality, temperature, pH, turbidity charts wrapped in responsive containers.
+
+- js/dashboard.js
+  JavaScript for dashboard page.
+  Uses Chart.js to create line charts for temperature, pH, turbidity, dissolved oxygen.
+  Chart options set for responsive and maintainAspectRatio.
+  Implements rolling window data update to keep max 10 data points.
+  Fetches simulated sensor data every 5 seconds and updates charts and hazard table.
+  Handles view mode toggle between simple and professional views.
+
+- css/dashboard.css
+  Styles for dashboard page.
+  Defines colors, layout, sidebar, topbar, cards, charts, tables.
+  Adds .chart-container class with fixed width 600px and height 300px for charts.
+  Responsive adjustments for smaller screens.
+
+3. Other Files
+
+- frontend/css/: contains stylesheets for dashboard, farm view, home, sidebar, water usage.
+- frontend/js/: contains JavaScript files for dashboard, farm dashboard, farm view, main, sidebar, water usage.
+- backend/api/routes/: contains other API route files for sensors, weather, alerts, auth, farming.
+- backend/requirements.txt: Python dependencies.
+- Dockerfile: container setup.
+- README.md: project documentation (not yet read).
+
+Summary:
+This project is a water monitoring system with a FastAPI backend providing REST API endpoints for sensors, weather, hazards, alerts, and authentication. The backend uses SQLAlchemy ORM with a SQLite or other database. The frontend is a web dashboard built with HTML, CSS, and JavaScript, using Chart.js for data visualization and FontAwesome for icons. The dashboard displays real-time sensor data, hazard analysis, and alerts with responsive design.
+
+This overview covers the main files, their functions, libraries used, and overall architecture.

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Management - Water Monitoring System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/farm-view.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-water"></i>
+                <h1>WaterWatch</h1>
+            </div>
+            <button class="sidebar-close" id="sidebarClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="user-profile">
+            <div class="profile-image">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="profile-info">
+                <h3>Welcome</h3>
+                <p class="user-name">Guest User</p>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="index.html">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Water Quality</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="farm-view.html" class="active">
+                        <i class="fas fa-seedling"></i>
+                        <span>Farm Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="submenu-toggle">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Analytics</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="#">Water Usage</a></li>
+                        <li><a href="#">Pump Stats</a></li>
+                        <li><a href="#">Reports</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="submenu-toggle">
+                        <i class="fas fa-bell"></i>
+                        <span>Alerts</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                    <ul class="submenu">
+                        <li><a href="#">Notifications</a></li>
+                        <li><a href="#">Alert Settings</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="about.html">
+                        <i class="fas fa-info-circle"></i>
+                        <span>About</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="contact.html">
+                        <i class="fas fa-envelope"></i>
+                        <span>Contact</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="#" id="loginBtn" class="btn-login">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Login</span>
+            </a>
+            <div class="theme-toggle">
+                <i class="fas fa-moon"></i>
+                <span>Dark Mode</span>
+                <label class="switch">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Topbar -->
+        <header class="topbar">
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="page-title">
+                <h1>Farm Management Dashboard</h1>
+            </div>
+            <div class="topbar-actions">
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                <button class="quick-actions">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Farm Management Content -->
+        <main class="farm-content">
+            <!-- Overview Section -->
+            <section class="overview-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Total Water Usage</h3>
+                            <p class="stat-value">2,450 <span>Gallons</span></p>
+                            <p class="stat-change positive">+5% from yesterday</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Active Crops</h3>
+                            <p class="stat-value">4 <span>Types</span></p>
+                            <p class="stat-change">All healthy</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Next Irrigation</h3>
+                            <p class="stat-value">2h 15m</p>
+                            <p class="stat-change">Zone 2 - Corn Field</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-thermometer-half"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Soil Conditions</h3>
+                            <p class="stat-value">Optimal</p>
+                            <p class="stat-change positive">All zones normal</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <section class="charts-section">
+                <div class="chart-container">
+                    <h2>Crop Performance</h2>
+                    <canvas id="cropPerformanceChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h2>Water Consumption by Zone</h2>
+                    <canvas id="waterConsumptionChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Irrigation Schedule -->
+            <section class="schedule-section">
+                <div class="section-header">
+                    <h2>Irrigation Schedule</h2>
+                    <button class="btn-add-schedule">
+                        <i class="fas fa-plus"></i> Add Schedule
+                    </button>
+                </div>
+                <div class="schedule-table-container">
+                    <table class="schedule-table">
+                        <thead>
+                            <tr>
+                                <th>Zone</th>
+                                <th>Crop</th>
+                                <th>Start Time</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scheduleTableBody">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Zone Controls -->
+            <section class="zones-section">
+                <div class="section-header">
+                    <h2>Zone Controls</h2>
+                    <div class="zone-actions">
+                        <button class="btn-emergency">
+                            <i class="fas fa-stop-circle"></i> Emergency Stop
+                        </button>
+                    </div>
+                </div>
+                <div class="zones-grid" id="zonesGrid">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/sidebar.js"></script>
+    <script src="js/farm-view.js"></script>
+</body>
+</html>
