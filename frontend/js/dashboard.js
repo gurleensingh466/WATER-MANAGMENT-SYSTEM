@@ -2,6 +2,7 @@
 let map;
 let weatherChart;
 let qualityChart;
+let dashboardCards = {};
 
 document.addEventListener('DOMContentLoaded', function() {
     initializeMap();
@@ -9,7 +10,172 @@ document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
     fetchWeatherData();
     updateCropWaterNeeds();
+    loadDashboardCards();
+    initializeCropManagement();
 });
+
+// Dashboard Card Management
+function loadDashboardCards() {
+    // Load cards data from localStorage or use defaults
+    const savedCards = localStorage.getItem('dashboardCards');
+    if (savedCards) {
+        dashboardCards = JSON.parse(savedCards);
+    } else {
+        dashboardCards = {
+            'water-usage': { value: '12,450 L', progress: 68, trend: '12% from yesterday' },
+            'active-fields': { value: '12/15', progress: 80, trend: '3 fields harvested' },
+            'moisture-avg': { value: '58%', progress: 58, trend: 'Within normal range' },
+            'pending-irrigation': { value: '5', progress: 38, trend: '2 urgent' },
+            'weather-update': { value: 'Partly Cloudy', temp: '25°C', humidity: '65%' },
+            'power-consumption': { value: '23.5 kWh', progress: 47, trend: '5% less than yesterday' }
+        };
+        saveDashboardCards();
+    }
+    updateCardDisplays();
+}
+
+function saveDashboardCards() {
+    localStorage.setItem('dashboardCards', JSON.stringify(dashboardCards));
+}
+
+function updateCardDisplays() {
+    // Update water usage
+    if (dashboardCards['water-usage']) {
+        const card = dashboardCards['water-usage'];
+        document.getElementById('waterUsedToday').textContent = card.value;
+    }
+    
+    // Update active fields
+    if (dashboardCards['active-fields']) {
+        const card = dashboardCards['active-fields'];
+        document.getElementById('activeFields').textContent = card.value;
+    }
+    
+    // Update moisture average
+    if (dashboardCards['moisture-avg']) {
+        const card = dashboardCards['moisture-avg'];
+        document.getElementById('moistureAvg').textContent = card.value;
+    }
+    
+    // Update pending irrigations
+    if (dashboardCards['pending-irrigation']) {
+        const card = dashboardCards['pending-irrigation'];
+        document.getElementById('pendingIrrigation').textContent = card.value;
+    }
+    
+    // Update weather
+    if (dashboardCards['weather-update']) {
+        const card = dashboardCards['weather-update'];
+        document.getElementById('currentWeather').textContent = card.value;
+    }
+    
+    // Update power consumption
+    if (dashboardCards['power-consumption']) {
+        const card = dashboardCards['power-consumption'];
+        document.getElementById('powerConsumption').textContent = card.value;
+    }
+}
+
+function editCard(cardId) {
+    const card = dashboardCards[cardId];
+    if (!card) return;
+    
+    const cardElement = document.querySelector(`[data-card-id="${cardId}"]`);
+    const cardTitle = cardElement.querySelector('.card-title').textContent;
+    const currentValue = cardElement.querySelector('.card-value').textContent;
+    
+    const newValue = prompt(`Edit ${cardTitle}\nCurrent value: ${currentValue}\n\nEnter new value:`);
+    
+    if (newValue !== null && newValue.trim() !== '') {
+        card.value = newValue.trim();
+        saveDashboardCards();
+        updateCardDisplays();
+        showNotification(`${cardTitle} updated successfully!`, 'success');
+    }
+}
+
+function deleteCard(cardId) {
+    const cardElement = document.querySelector(`[data-card-id="${cardId}"]`);
+    const cardTitle = cardElement.querySelector('.card-title').textContent;
+    
+    if (confirm(`Are you sure you want to delete the "${cardTitle}" card?\n\nThis action cannot be undone.`)) {
+        cardElement.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => {
+            cardElement.remove();
+            delete dashboardCards[cardId];
+            saveDashboardCards();
+            showNotification(`${cardTitle} card deleted successfully!`, 'success');
+        }, 300);
+    }
+}
+
+function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = 'notification show';
+    notification.style.cssText = `
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: ${type === 'success' ? 'linear-gradient(135deg, #4CAF50, #388E3C)' : 'linear-gradient(135deg, #F44336, #D32F2F)'};
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        z-index: 10000;
+        animation: slideInRight 0.3s ease;
+    `;
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+        <span>${message}</span>
+    `;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// Add CSS animations
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideInRight {
+        from {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+    }
+    
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+            transform: scale(1);
+        }
+        to {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+    }
+`;
+document.head.appendChild(style);
 
 function initializeMap() {
     // Initialize the map with a default center (replace with your farm's coordinates)

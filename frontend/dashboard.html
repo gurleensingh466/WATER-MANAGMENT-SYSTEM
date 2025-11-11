@@ -61,8 +61,8 @@
                         <i class="fas fa-chevron-right"></i>
                     </a>
                     <ul class="submenu">
-                        <li><a href="#">Water Usage</a></li>
-                        <li><a href="#">Pump Stats</a></li>
+                        <li><a href="water-usage.html">Water Usage</a></li>
+                        <li><a href="pump-stats.html">Pump Stats</a></li>
                         <li><a href="#">Reports</a></li>
                     </ul>
                 </li>
@@ -111,46 +111,203 @@
             </div>
         </div>
 
-        <!-- Quick Stats Section -->
-        <div class="quick-stats">
-            <div class="stat-box">
-                <div class="stat-icon">
-                    <i class="fas fa-temperature-high"></i>
+        <!-- Enhanced Dashboard Cards Section -->
+        <div class="dashboard-cards">
+            <div class="stat-card" data-card-id="water-usage">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #2196F3, #1976D2);">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <div class="card-actions">
+                        <button class="card-action-btn" onclick="editCard('water-usage')" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="card-action-btn" onclick="deleteCard('water-usage')" title="Delete">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="stat-info">
-                    <h3>Temperature</h3>
-                    <p class="stat-value" id="tempValue">25°C</p>
-                    <p class="stat-change positive">↑ 2.3°C</p>
+                <div class="card-body">
+                    <h3 class="card-title">Total Water Used Today</h3>
+                    <p class="card-value" id="waterUsedToday">12,450 L</p>
+                    <div class="card-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 68%; background: linear-gradient(90deg, #2196F3, #64B5F6);"></div>
+                        </div>
+                        <span class="progress-label">68% of daily target</span>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-trend positive">
+                            <i class="fas fa-arrow-up"></i> 12% from yesterday
+                        </span>
+                    </div>
                 </div>
             </div>
-            <div class="stat-box">
-                <div class="stat-icon">
-                    <i class="fas fa-tint"></i>
+
+            <div class="stat-card" data-card-id="active-fields">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #4CAF50, #388E3C);">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="card-actions">
+                        <button class="card-action-btn" onclick="editCard('active-fields')" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="card-action-btn" onclick="deleteCard('active-fields')" title="Delete">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="stat-info">
-                    <h3>Humidity</h3>
-                    <p class="stat-value" id="humidityValue">65%</p>
-                    <p class="stat-change negative">↓ 5%</p>
+                <div class="card-body">
+                    <h3 class="card-title">Active Fields</h3>
+                    <p class="card-value" id="activeFields">12/15</p>
+                    <div class="card-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 80%; background: linear-gradient(90deg, #4CAF50, #66BB6A);"></div>
+                        </div>
+                        <span class="progress-label">80% fields operational</span>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-trend">
+                            <i class="fas fa-check-circle"></i> 3 fields harvested
+                        </span>
+                    </div>
                 </div>
             </div>
-            <div class="stat-box">
-                <div class="stat-icon">
-                    <i class="fas fa-cloud"></i>
+
+            <div class="stat-card" data-card-id="moisture-avg">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #FF9800, #F57C00);">
+                        <i class="fas fa-droplet"></i>
+                    </div>
+                    <div class="card-actions">
+                        <button class="card-action-btn" onclick="editCard('moisture-avg')" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="card-action-btn" onclick="deleteCard('moisture-avg')" title="Delete">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="stat-info">
-                    <h3>Weather</h3>
-                    <p class="stat-value" id="weatherStatus">Partly Cloudy</p>
-                    <p class="weather-temp">22°C</p>
+                <div class="card-body">
+                    <h3 class="card-title">Moisture Average</h3>
+                    <p class="card-value" id="moistureAvg">58%</p>
+                    <div class="card-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 58%; background: linear-gradient(90deg, #FF9800, #FFB74D);"></div>
+                        </div>
+                        <span class="progress-label">Optimal range: 50-70%</span>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-trend">
+                            <i class="fas fa-info-circle"></i> Within normal range
+                        </span>
+                    </div>
                 </div>
             </div>
-            <div class="stat-box">
-                <div class="stat-icon">
-                    <i class="fas fa-water"></i>
+
+            <div class="stat-card" data-card-id="pending-irrigation">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #9C27B0, #7B1FA2);">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="card-actions">
+                        <button class="card-action-btn" onclick="editCard('pending-irrigation')" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="card-action-btn" onclick="deleteCard('pending-irrigation')" title="Delete">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="stat-info">
-                    <h3>Water Required</h3>
-                    <p class="stat-value" id="waterRequired">2.5L/m²</p>
-                    <p class="stat-change recommendation">Optimal</p>
+                <div class="card-body">
+                    <h3 class="card-title">Pending Irrigations</h3>
+                    <p class="card-value" id="pendingIrrigation">5</p>
+                    <div class="card-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 38%; background: linear-gradient(90deg, #9C27B0, #BA68C8);"></div>
+                        </div>
+                        <span class="progress-label">5 of 13 remaining today</span>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-trend warning">
+                            <i class="fas fa-exclamation-triangle"></i> 2 urgent
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card" data-card-id="weather-update">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #FFC107, #FFA000);">
+                        <i class="fas fa-cloud-sun"></i>
+                    </div>
+                    <div class="card-actions">
+                        <button class="card-action-btn" onclick="editCard('weather-update')" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="card-action-btn" onclick="deleteCard('weather-update')" title="Delete">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Weather Update</h3>
+                    <p class="card-value" id="currentWeather">Partly Cloudy</p>
+                    <div class="weather-details-grid">
+                        <div class="weather-item">
+                            <i class="fas fa-temperature-high"></i>
+                            <span>25°C</span>
+                        </div>
+                        <div class="weather-item">
+                            <i class="fas fa-tint"></i>
+                            <span>65%</span>
+                        </div>
+                        <div class="weather-item">
+                            <i class="fas fa-wind"></i>
+                            <span>12 km/h</span>
+                        </div>
+                        <div class="weather-item">
+                            <i class="fas fa-eye"></i>
+                            <span>10 km</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-trend">
+                            <i class="fas fa-cloud-rain"></i> Rain expected tomorrow
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card" data-card-id="power-consumption">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #F44336, #D32F2F);">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="card-actions">
+                        <button class="card-action-btn" onclick="editCard('power-consumption')" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="card-action-btn" onclick="deleteCard('power-consumption')" title="Delete">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Power Consumption</h3>
+                    <p class="card-value" id="powerConsumption">23.5 kWh</p>
+                    <div class="card-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 47%; background: linear-gradient(90deg, #F44336, #EF5350);"></div>
+                        </div>
+                        <span class="progress-label">47% of daily budget</span>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-trend negative">
+                            <i class="fas fa-arrow-down"></i> 5% less than yesterday
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -220,8 +377,8 @@
                 <div class="box-header">
                     <h2>Irrigation Schedule</h2>
                     <div class="box-actions">
-                        <button class="btn-action" onclick="window.location.href='water-usage.html'">
-                            <i class="fas fa-plus"></i> Add Schedule
+                        <button class="btn-action" onclick="window.location.href='irrigation-schedule.html'">
+                            <i class="fas fa-calendar-alt"></i> View All
                         </button>
                     </div>
                 </div>

@@ -22,7 +22,7 @@ app.add_middleware(
 )
 
 # Import routers
-from api.routes import sensors, weather, hazards, alerts, auth
+from api.routes import sensors, weather, hazards, alerts, auth, irrigation, dashboard, water_usage, pump_stats
 
 # Include routers
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
@@ -30,6 +30,10 @@ app.include_router(sensors.router, prefix="/api/sensors", tags=["Sensors"])
 app.include_router(weather.router, prefix="/api/weather", tags=["Weather"])
 app.include_router(hazards.router, prefix="/api/hazards", tags=["Hazards"])
 app.include_router(alerts.router, prefix="/api/alerts", tags=["Alerts"])
+app.include_router(irrigation.router, prefix="/api", tags=["Irrigation"])
+app.include_router(dashboard.router, prefix="/api", tags=["Dashboard"])
+app.include_router(water_usage.router, tags=["Water Usage"])
+app.include_router(pump_stats.router, tags=["Pump Stats"])
 
 @app.get("/")
 async def root():

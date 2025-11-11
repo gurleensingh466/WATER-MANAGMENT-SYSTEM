@@ -34,6 +34,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const submenu = toggle.nextElementSibling;
             const chevron = toggle.querySelector('.fa-chevron-right');
             
+            // Close other open submenus except the clicked one
+            submenuToggles.forEach(otherToggle => {
+                if (otherToggle !== toggle) {
+                    const otherSubmenu = otherToggle.nextElementSibling;
+                    const otherChevron = otherToggle.querySelector('.fa-chevron-right');
+                    otherSubmenu.classList.remove('active');
+                    otherChevron.style.transform = 'rotate(0)';
+                }
+            });
+
             submenu.classList.toggle('active');
             chevron.style.transform = submenu.classList.contains('active') 
                 ? 'rotate(90deg)' 

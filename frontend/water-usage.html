@@ -6,7 +6,7 @@
     <title>Water Usage Analysis - Water Monitoring System</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/sidebar.css">
-    <link rel="stylesheet" href="css/water-usage.css">
+    <link rel="stylesheet" href="css/water-usage-enhanced.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -60,7 +60,7 @@
                     </a>
                     <ul class="submenu active">
                         <li><a href="water-usage.html" class="active">Water Usage</a></li>
-                        <li><a href="#">Pump Stats</a></li>
+                        <li><a href="pump-stats.html">Pump Stats</a></li>
                         <li><a href="#">Reports</a></li>
                     </ul>
                 </li>
@@ -104,13 +104,265 @@
             <button class="sidebar-toggle" id="sidebarToggle">
                 <i class="fas fa-bars"></i>
             </button>
-            <h1>Water Usage Analysis</h1>
+            <div class="header-content">
+                <div>
+                    <h1>Water Usage Management</h1>
+                    <p class="header-subtitle">Monitor and analyze water consumption across all fields</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-icon" id="refreshData" title="Refresh Data">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="btn-icon" id="exportData" title="Export Data">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="btn-primary" id="addUsageBtn">
+                        <i class="fas fa-plus"></i> Add Record
+                    </button>
+                </div>
+            </div>
         </header>
 
         <!-- Main Content -->
         <main class="main-content">
-            <div class="analysis-container">
-                <div class="analysis-form">
+            <!-- Dashboard Stats -->
+            <div class="stats-dashboard">
+                <div class="stat-card gradient-blue">
+                    <div class="stat-icon">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <div class="stat-details">
+                        <span class="stat-label">Total Water Used Today</span>
+                        <h2 class="stat-value" id="totalWaterToday">0 L</h2>
+                        <div class="stat-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="todayProgress" style="width: 0%"></div>
+                            </div>
+                            <span class="progress-text">Target: <span id="dailyTarget">20,000 L</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card gradient-green">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-details">
+                        <span class="stat-label">Avg. Usage per Field</span>
+                        <h2 class="stat-value" id="avgUsage">0 L</h2>
+                        <span class="stat-trend positive">
+                            <i class="fas fa-arrow-down"></i> 8% less than last week
+                        </span>
+                    </div>
+                </div>
+
+                <div class="stat-card gradient-orange">
+                    <div class="stat-icon">
+                        <i class="fas fa-rupee-sign"></i>
+                    </div>
+                    <div class="stat-details">
+                        <span class="stat-label">Total Cost (This Month)</span>
+                        <h2 class="stat-value" id="totalCost">₹0</h2>
+                        <span class="stat-trend">
+                            <i class="fas fa-info-circle"></i> Based on current rates
+                        </span>
+                    </div>
+                </div>
+
+                <div class="stat-card gradient-purple">
+                    <div class="stat-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="stat-details">
+                        <span class="stat-label">Water Efficiency</span>
+                        <h2 class="stat-value" id="efficiency">0%</h2>
+                        <span class="stat-trend positive">
+                            <i class="fas fa-check-circle"></i> Optimal range
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Water Source Levels -->
+            <div class="source-levels-container">
+                <h3 class="section-title">
+                    <i class="fas fa-water"></i> Water Source Levels
+                </h3>
+                <div class="source-levels">
+                    <div class="source-card">
+                        <div class="source-header">
+                            <div class="source-icon tank">
+                                <i class="fas fa-water"></i>
+                            </div>
+                            <h4>Main Tank</h4>
+                        </div>
+                        <div class="level-meter">
+                            <div class="level-fill" id="tankLevel" data-level="75"></div>
+                            <span class="level-value">75%</span>
+                        </div>
+                        <div class="source-info">
+                            <span><i class="fas fa-database"></i> 7,500 / 10,000 L</span>
+                            <span class="status-good"><i class="fas fa-check-circle"></i> Good</span>
+                        </div>
+                    </div>
+
+                    <div class="source-card">
+                        <div class="source-header">
+                            <div class="source-icon borewell">
+                                <i class="fas fa-droplet"></i>
+                            </div>
+                            <h4>Borewell</h4>
+                        </div>
+                        <div class="level-meter">
+                            <div class="level-fill" id="borewellLevel" data-level="45"></div>
+                            <span class="level-value">45%</span>
+                        </div>
+                        <div class="source-info">
+                            <span><i class="fas fa-database"></i> 2,250 / 5,000 L</span>
+                            <span class="status-warning"><i class="fas fa-exclamation-triangle"></i> Low</span>
+                        </div>
+                    </div>
+
+                    <div class="source-card">
+                        <div class="source-header">
+                            <div class="source-icon rainwater">
+                                <i class="fas fa-cloud-rain"></i>
+                            </div>
+                            <h4>Rainwater</h4>
+                        </div>
+                        <div class="level-meter">
+                            <div class="level-fill" id="rainwaterLevel" data-level="90"></div>
+                            <span class="level-value">90%</span>
+                        </div>
+                        <div class="source-info">
+                            <span><i class="fas fa-database"></i> 2,700 / 3,000 L</span>
+                            <span class="status-excellent"><i class="fas fa-star"></i> Excellent</span>
+                        </div>
+                    </div>
+
+                    <div class="source-card">
+                        <div class="source-header">
+                            <div class="source-icon river">
+                                <i class="fas fa-water"></i>
+                            </div>
+                            <h4>Canal Supply</h4>
+                        </div>
+                        <div class="level-meter">
+                            <div class="level-fill" id="canalLevel" data-level="60"></div>
+                            <span class="level-value">60%</span>
+                        </div>
+                        <div class="source-info">
+                            <span><i class="fas fa-database"></i> 4,800 / 8,000 L</span>
+                            <span class="status-good"><i class="fas fa-check-circle"></i> Good</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-chart-line"></i> Usage Trend (Last 7 Days)</h3>
+                        <div class="chart-controls">
+                            <button class="btn-small active" data-period="7">7D</button>
+                            <button class="btn-small" data-period="30">30D</button>
+                            <button class="btn-small" data-period="90">90D</button>
+                        </div>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="usageTrendChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-chart-pie"></i> Usage Distribution</h3>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="distributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters & Search -->
+            <div class="filters-bar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchField" placeholder="Search by field name or crop...">
+                </div>
+                <div class="filter-group">
+                    <select id="fieldFilter" class="filter-select">
+                        <option value="all">All Fields</option>
+                        <option value="field-a">Field A</option>
+                        <option value="field-b">Field B</option>
+                        <option value="field-c">Field C</option>
+                    </select>
+                    <select id="cropFilter" class="filter-select">
+                        <option value="all">All Crops</option>
+                        <option value="wheat">Wheat</option>
+                        <option value="rice">Rice</option>
+                        <option value="corn">Corn</option>
+                    </select>
+                    <select id="statusFilter" class="filter-select">
+                        <option value="all">All Status</option>
+                        <option value="optimal">Optimal</option>
+                        <option value="overused">Overused</option>
+                        <option value="underused">Underused</option>
+                    </select>
+                    <input type="date" id="dateFilter" class="filter-input">
+                    <button class="btn-secondary" id="resetFilters">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Usage Table -->
+            <div class="data-table-container">
+                <div class="table-header">
+                    <h3><i class="fas fa-table"></i> Field-wise Water Usage</h3>
+                    <div class="table-actions">
+                        <button class="btn-small" id="exportCSV">
+                            <i class="fas fa-file-csv"></i> CSV
+                        </button>
+                        <button class="btn-small" id="exportPDF">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </button>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table" id="usageTable">
+                        <thead>
+                            <tr>
+                                <th>Field Name</th>
+                                <th>Crop Type</th>
+                                <th>Date</th>
+                                <th>Water Used (L)</th>
+                                <th>Duration</th>
+                                <th>Flow Rate</th>
+                                <th>Status</th>
+                                <th>Cost (₹)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usageTableBody">
+                            <!-- Data will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-pagination" id="tablePagination">
+                    <!-- Pagination will be added dynamically -->
+                </div>
+            </div>
+
+            <!-- Old Calculator Section (Collapsed) -->
+            <div class="calculator-section collapsed" id="calculatorSection">
+                <div class="section-toggle" onclick="toggleCalculator()">
+                    <h3><i class="fas fa-calculator"></i> Water Requirement Calculator</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="calculator-content">
+                    <div class="analysis-form">
                     <h2>Crop Water Requirement Calculator</h2>
                     
                     <div class="form-section">
@@ -253,7 +505,112 @@
         </main>
     </div>
 
+    <!-- Add/Edit Usage Modal -->
+    <div class="modal" id="usageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Water Usage Record</h2>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="usageForm">
+                    <input type="hidden" id="recordId">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Field Name <span class="required">*</span></label>
+                            <input type="text" id="fieldName" required placeholder="e.g., Field A-01">
+                        </div>
+                        <div class="form-group">
+                            <label>Crop Type <span class="required">*</span></label>
+                            <select id="cropType" required>
+                                <option value="">Select Crop</option>
+                                <option value="Wheat">Wheat</option>
+                                <option value="Rice">Rice</option>
+                                <option value="Corn">Corn</option>
+                                <option value="Cotton">Cotton</option>
+                                <option value="Tomato">Tomato</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Date <span class="required">*</span></label>
+                            <input type="date" id="usageDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Water Used (Liters) <span class="required">*</span></label>
+                            <input type="number" id="waterUsed" required min="0" placeholder="e.g., 5000">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Start Time <span class="required">*</span></label>
+                            <input type="time" id="startTime" required>
+                        </div>
+                        <div class="form-group">
+                            <label>End Time <span class="required">*</span></label>
+                            <input type="time" id="endTime" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Flow Rate (L/min)</label>
+                            <input type="number" id="flowRate" min="0" step="0.1" placeholder="e.g., 45.5">
+                        </div>
+                        <div class="form-group">
+                            <label>Water Source</label>
+                            <select id="waterSource">
+                                <option value="Tank">Main Tank</option>
+                                <option value="Borewell">Borewell</option>
+                                <option value="Rainwater">Rainwater</option>
+                                <option value="Canal">Canal Supply</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Notes (Optional)</label>
+                        <textarea id="notes" rows="3" placeholder="Additional information..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+                <button type="submit" form="usageForm" class="btn-primary" id="saveBtn">Save Record</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content small">
+            <div class="modal-header">
+                <h2>Confirm Delete</h2>
+                <button class="modal-close" id="deleteModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="delete-confirmation">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Are you sure you want to delete this water usage record?</p>
+                    <p class="warning-text">This action cannot be undone.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="cancelDeleteBtn">Cancel</button>
+                <button type="button" class="btn-danger" id="confirmDeleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
     <script src="js/sidebar.js"></script>
-    <script src="js/water-usage.js"></script>
+    <script src="js/water-usage-enhanced.js"></script>
 </body>
 </html>

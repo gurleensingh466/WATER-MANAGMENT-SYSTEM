@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pump Statistics - Water Monitoring System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/pump-stats.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-water"></i>
+            <span class="sidebar-title">Water Monitor</span>
+            <button class="sidebar-toggle" aria-label="Toggle Sidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="irrigation-schedule.html" class="nav-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Irrigation Schedule</span>
+            </a>
+            <a href="water-usage.html" class="nav-item">
+                <i class="fas fa-tint"></i>
+                <span>Water Usage</span>
+            </a>
+            <a href="pump-stats.html" class="nav-item active">
+                <i class="fas fa-cog"></i>
+                <span>Pump Stats</span>
+            </a>
+            <a href="farm-view.html" class="nav-item">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Farm View</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="index.html" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <div class="content-wrapper">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="header-content">
+                <div>
+                    <h1>Pump Statistics & Management</h1>
+                    <p class="header-subtitle">Real-time monitoring and control of irrigation pumps</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-icon" id="refreshBtn" title="Refresh Data">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="btn-secondary" id="exportReportBtn">
+                        <i class="fas fa-file-export"></i> Export Report
+                    </button>
+                    <button class="btn-primary" id="addPumpBtn">
+                        <i class="fas fa-plus"></i> Add Pump
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- System Overview Stats -->
+            <div class="stats-dashboard">
+                <div class="stat-card gradient-blue">
+                    <div class="stat-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div class="stat-details">
+                        <span class="stat-label">Active Pumps</span>
+                        <span class="stat-value" id="activePumpsValue">0</span>
+                        <div class="stat-trend positive" id="activePumpsTrend">
+                            <i class="fas fa-arrow-up"></i> All systems operational
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card gradient-green">
+                    <div class="stat-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="stat-details">
+                        <span class="stat-label">Power Consumption</span>
+                        <span class="stat-value" id="powerConsumptionValue">0 kW</span>
+                        <div class="stat-trend" id="powerTrend">
+                            <i class="fas fa-minus"></i> 0 kWh today
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card gradient-purple">
+                    <div class="stat-icon">
+                        <i class="fas fa-water"></i>
+                    </div>
+                    <div class="stat-details">
+                        <span class="stat-label">Total Flow Rate</span>
+                        <span class="stat-value" id="flowRateValue">0 L/min</span>
+                        <div class="stat-trend" id="flowTrend">
+                            <i class="fas fa-arrow-up"></i> Combined output
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card gradient-orange">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-details">
+                        <span class="stat-label">Avg. Runtime Today</span>
+                        <span class="stat-value" id="runtimeValue">0 hrs</span>
+                        <div class="stat-trend" id="runtimeTrend">
+                            <i class="fas fa-check"></i> Within limits
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Pump Status Grid -->
+            <div class="pumps-grid-container">
+                <div class="section-header">
+                    <h2><i class="fas fa-broadcast-tower"></i> Live Pump Status</h2>
+                    <div class="legend">
+                        <span class="legend-item"><span class="dot running"></span> Running</span>
+                        <span class="legend-item"><span class="dot idle"></span> Idle</span>
+                        <span class="legend-item"><span class="dot maintenance"></span> Maintenance</span>
+                        <span class="legend-item"><span class="dot error"></span> Error</span>
+                    </div>
+                </div>
+                <div class="pumps-grid" id="pumpsGrid">
+                    <!-- Pump cards will be dynamically added here -->
+                </div>
+            </div>
+
+            <!-- Performance Charts -->
+            <div class="charts-section">
+                <div class="chart-card large">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-chart-area"></i> Power Consumption Trend</h3>
+                        <div class="chart-controls">
+                            <button class="btn-small active" data-period="24">24H</button>
+                            <button class="btn-small" data-period="7">7D</button>
+                            <button class="btn-small" data-period="30">30D</button>
+                        </div>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="powerTrendChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-chart-pie"></i> Runtime Distribution</h3>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="runtimeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Pump List -->
+            <div class="data-table-container">
+                <div class="table-header">
+                    <h3><i class="fas fa-list"></i> Pump Details & Maintenance</h3>
+                    <div class="table-actions">
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" data-filter="all">All</button>
+                            <button class="filter-tab" data-filter="running">Running</button>
+                            <button class="filter-tab" data-filter="idle">Idle</button>
+                            <button class="filter-tab" data-filter="maintenance">Maintenance</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table" id="pumpTable">
+                        <thead>
+                            <tr>
+                                <th>Pump ID</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>Power (HP)</th>
+                                <th>Flow Rate</th>
+                                <th>Runtime Today</th>
+                                <th>Temperature</th>
+                                <th>Efficiency</th>
+                                <th>Next Maintenance</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pumpTableBody">
+                            <!-- Data will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Alerts & Notifications -->
+            <div class="alerts-container">
+                <div class="section-header">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Recent Alerts</h3>
+                    <button class="btn-small" id="viewAllAlertsBtn">View All</button>
+                </div>
+                <div class="alerts-list" id="alertsList">
+                    <!-- Alerts will be dynamically added -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Pump Modal -->
+    <div class="modal" id="pumpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Pump</h2>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="pumpForm">
+                    <input type="hidden" id="pumpId">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Pump Name <span class="required">*</span></label>
+                            <input type="text" id="pumpName" required placeholder="e.g., Pump-A01">
+                        </div>
+                        <div class="form-group">
+                            <label>Location <span class="required">*</span></label>
+                            <input type="text" id="pumpLocation" required placeholder="e.g., North Field">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Power Rating (HP) <span class="required">*</span></label>
+                            <input type="number" id="powerRating" required min="1" step="0.5" placeholder="e.g., 5">
+                        </div>
+                        <div class="form-group">
+                            <label>Max Flow Rate (L/min) <span class="required">*</span></label>
+                            <input type="number" id="maxFlowRate" required min="1" placeholder="e.g., 150">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Installation Date <span class="required">*</span></label>
+                            <input type="date" id="installationDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Manufacturer</label>
+                            <input type="text" id="manufacturer" placeholder="e.g., CRI Pumps">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Model Number</label>
+                            <input type="text" id="modelNumber" placeholder="e.g., CR-300X">
+                        </div>
+                        <div class="form-group">
+                            <label>Maintenance Interval (days)</label>
+                            <input type="number" id="maintenanceInterval" min="1" value="90" placeholder="90">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Notes (Optional)</label>
+                        <textarea id="pumpNotes" rows="3" placeholder="Additional information..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+                <button type="submit" form="pumpForm" class="btn-primary" id="saveBtn">Save Pump</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Control Modal -->
+    <div class="modal" id="controlModal">
+        <div class="modal-content small">
+            <div class="modal-header">
+                <h2 id="controlModalTitle">Pump Control</h2>
+                <button class="modal-close" id="controlModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="control-panel" id="controlPanel">
+                    <div class="pump-info">
+                        <h3 id="controlPumpName">Pump Name</h3>
+                        <p id="controlPumpLocation">Location</p>
+                    </div>
+                    
+                    <div class="control-actions">
+                        <button class="control-btn start" id="startPumpBtn">
+                            <i class="fas fa-play"></i>
+                            <span>Start Pump</span>
+                        </button>
+                        <button class="control-btn stop" id="stopPumpBtn">
+                            <i class="fas fa-stop"></i>
+                            <span>Stop Pump</span>
+                        </button>
+                        <button class="control-btn maintenance" id="maintenanceBtn">
+                            <i class="fas fa-wrench"></i>
+                            <span>Mark for Maintenance</span>
+                        </button>
+                    </div>
+                    
+                    <div class="control-warning">
+                        <i class="fas fa-info-circle"></i>
+                        <p>Control actions will take effect within 5 seconds</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content small">
+            <div class="modal-header">
+                <h2>Confirm Delete</h2>
+                <button class="modal-close" id="deleteModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="delete-confirmation">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Are you sure you want to delete this pump?</p>
+                    <p class="warning-text">This action cannot be undone and will remove all associated data.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="cancelDeleteBtn">Cancel</button>
+                <button type="button" class="btn-danger" id="confirmDeleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/sidebar.js"></script>
+    <script src="js/pump-stats.js"></script>
+</body>
+</html>
